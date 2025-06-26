@@ -26,7 +26,6 @@ const secretsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
 });
 
 const userSchema = new mongoose.Schema(
@@ -46,7 +45,6 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
-      required: true,
     },
     gender: {
       type: String,
@@ -58,7 +56,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      match: [/\S+@\S+\.\S+/, 'Invalid email format'], // Ensures the email is in a valid format
+      match: [/\S+@\S+\.\S+/, "Invalid email format"], // Ensures the email is in a valid format
       unique: true,
     },
     mobileNo: {
