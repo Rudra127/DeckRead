@@ -24,7 +24,8 @@ const expressApp = async (app) => {
   // CORS configuration
   app.use(
     cors({
-      origin: (process.env.CLIENT_URLS || "http://localhost:3000").split(","),
+      // origin: (process.env.CLIENT_URLS || "http://localhost:3000").split(","),
+      origin: "*",
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],

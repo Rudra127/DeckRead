@@ -1,33 +1,5 @@
 import mongoose from "mongoose";
 import { v4 as uuid } from "uuid";
-
-const secretsSchema = new mongoose.Schema({
-  githubPatToken: {
-    type: String,
-    required: true,
-  },
-  githubUserName: {
-    type: String,
-    required: true,
-  },
-  awsClinetId: {
-    type: String,
-    required: true,
-  },
-  awsSecretKey: {
-    type: String,
-    required: true,
-  },
-  awsRegion: {
-    type: String,
-    required: true,
-  },
-  salt: {
-    type: String,
-    required: true,
-  },
-});
-
 const userSchema = new mongoose.Schema(
   {
     userId: {
@@ -36,79 +8,59 @@ const userSchema = new mongoose.Schema(
       unique: true,
       default: uuid,
     },
-    firstName: {
+    userName: {
       type: String,
       required: true,
-    },
-    middleName: {
-      type: String,
-    },
-    lastName: {
-      type: String,
-    },
-    gender: {
-      type: String,
-      enum: ["male", "female", "other"],
-    },
-    DOB: {
-      type: Date,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      index: true,
+      match: [
+        /^[a-zA-Z0-9_.]+$/,
+        "Username can only contain letters, numbers, periods, and underscores",
+      ],
     },
     email: {
       type: String,
       required: true,
-      match: [/\S+@\S+\.\S+/, "Invalid email format"], // Ensures the email is in a valid format
       unique: true,
-    },
-    mobileNo: {
-      type: Number,
-    },
-    countryCallingCode: {
-      type: String,
-    },
-    password: {
-      type: String,
-      required: true,
+      trim: true,
+      lowercase: true,
+      match: [/\S+@\S+\.\S+/, "Invalid email format"],
     },
     salt: {
       type: String,
       required: true,
     },
+    password: {
+      type: String,
+      required: true,
+    },
+    bio: {
+      type: String,
+      maxlength: 160,
+      default: "",
+    },
     profileImageUrl: {
       type: String,
+      default: "default_profile_image_url",
     },
+    followerCount: { type: Number, default: 0 },
+    followingCount: { type: Number, default: 0 },
     isVerified: {
       type: Boolean,
-      required: true,
       default: false,
-    },
-    isSecretsSet: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    secretsSchema: {
-      type: secretsSchema,
     },
   },
   {
     timestamps: true,
-    // toJSON: {
-    //   transform(doc, ret) {
-    //     delete ret.password;
-    //     delete ret.salt;
-    //     return ret;
-    //   }
-    // },
-    // toObject: {
-    //   transform(doc, ret) {
-    //     delete ret.password;
-    //     delete ret.salt;
-    //     return ret;
-    //   }
-    // }
+
+    toJSON: {
+      transform(doc, ret) {
+        return ret;
+      },
+    },
   }
 );
-
 const userModel = mongoose.model("userDetails", userSchema);
-
 export default userModel;

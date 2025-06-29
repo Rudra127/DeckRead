@@ -10,11 +10,11 @@ const bookSchema = new mongoose.Schema(
     tags: [String],
     sourcePdfUrl: { type: String, required: true },
     language: { type: String, default: "en" },
-    vectorStatus: {
-      type: String,
-      enum: ["pending", "done", "error"],
-      default: "pending",
-    },
+    // vectorStatus: {
+    //   type: String,
+    //   enum: ["pending", "done", "error"],
+    //   default: "pending",
+    // },
   },
   { timestamps: true }
 );

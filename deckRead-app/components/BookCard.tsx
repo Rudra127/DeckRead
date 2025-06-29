@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 import { Book } from '../data/mockData';
 import { useAppContext } from '../context/AppContext';
 import { Feather } from '@expo/vector-icons';
@@ -18,28 +20,26 @@ const BookCard: React.FC<BookCardProps> = ({ book, currentCardIndex, onShare, on
   const isSaved = savedBooks.includes(book.id);
   const card = book.cards[currentCardIndex];
   
+  // Choose gradient based on index for variety
+  const gradients = [
+    ["#FFEECC", "#FFE4F0"],
+    ["#D8ECFF", "#E6E9FF"],
+    ["#FEE4D4", "#FFE8F0"]
+  ];
+  
   return (
     <View style={styles.container}>
-      <View style={styles.contentCard}>
+      <LinearGradient
+        colors={gradients[currentCardIndex % gradients.length]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.contentCard}
+      >
         {/* Header */}
         <View style={styles.cardHeader}>
           <Text style={styles.cardNumber}>
             {currentCardIndex + 1} / {book.cards.length}
           </Text>
-          <View style={styles.cardActions}>
-            <TouchableOpacity style={styles.actionButton} onPress={onComment}>
-              <Feather name="message-circle" size={20} color="#666" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton} onPress={onShare}>
-              <Feather name="share-2" size={20} color="#666" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => toggleSaveBook(book.id)}
-            >
-              <Feather name="bookmark" size={20} color={isSaved ? "#4A6FFF" : "#666"} />
-            </TouchableOpacity>
-          </View>
         </View>
         
         {/* Content */}
@@ -47,12 +47,32 @@ const BookCard: React.FC<BookCardProps> = ({ book, currentCardIndex, onShare, on
           <Text style={styles.cardText}>{card.content}</Text>
         </View>
         
+        {/* Action Row */}
+        <BlurView intensity={30} tint="light" style={styles.cardActions}>
+          <TouchableOpacity style={styles.actionButton} onPress={onComment}>
+            <Feather name="message-circle" size={22} color="#333" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton} onPress={onShare}>
+            <Feather name="share" size={22} color="#333" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => toggleSaveBook(book.id)}
+          >
+            <Feather
+              name={isSaved ? "bookmark" : "bookmark"}
+              size={22}
+              color={isSaved ? "#4A6FFF" : "#333"}
+            />
+          </TouchableOpacity>
+        </BlurView>
+        
         {/* Footer */}
         <View style={styles.bookInfo}>
           <Text style={styles.bookTitle}>{book.title}</Text>
           <Text style={styles.bookAuthor}>by {book.author}</Text>
         </View>
-      </View>
+      </LinearGradient>
     </View>
   );
 };
@@ -68,21 +88,20 @@ const styles = StyleSheet.create({
   contentCard: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 6,
     justifyContent: 'space-between',
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   cardNumber: {
     fontSize: 14,
@@ -90,25 +109,32 @@ const styles = StyleSheet.create({
   },
   cardActions: {
     flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: 24,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 32,
+    overflow: 'hidden',
   },
   actionButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f8f8f8',
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: 'rgba(255,255,255,0.35)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    marginHorizontal: 4,
   },
   cardContent: {
     flex: 1,
     justifyContent: 'center',
   },
   cardText: {
-    fontSize: 22,
-    lineHeight: 32,
+    fontSize: 28,
+    lineHeight: 38,
     color: '#333',
     textAlign: 'center',
+    fontWeight: '600',
   },
   bookInfo: {
     flex: 1,

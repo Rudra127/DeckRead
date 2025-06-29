@@ -21,13 +21,13 @@ export default class authService {
   }
 
   async Register(body) {
-    const { email, password } = body;
+    const { userName, email, password } = body;
 
     try {
       // Check for missing email or password
-      if (!email || !password) {
+      if (!email || !password || !userName) {
         return {
-          message: "Please enter both your email and password.",
+          message: "Please enter both your email, password and username.",
           status: 400,
         };
       }
@@ -53,8 +53,7 @@ export default class authService {
       const token = await generateSignature({
         email: email,
         userId: user.userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        userName: user.userName,
       });
 
       const verificationUrl = `${process.env.MAIN_FRONTEND_URL}/auth/verify/${token}`;
@@ -93,6 +92,7 @@ export default class authService {
 
   async Login(body) {
     const { email, password } = body;
+    console.log("here");
     if (!email || !password) {
       return {
         message: "Provide email and password",
@@ -110,7 +110,7 @@ export default class authService {
           status: 404,
         };
       }
-
+      console.log("existingUser.isVerified: ", existingUser.isVerified);
       // Check if the user is verified
       if (!existingUser.isVerified) {
         return {
@@ -118,14 +118,14 @@ export default class authService {
           status: 401,
         };
       }
-
       // Validate password
+      console.log("object", password, existingUser.password, existingUser.salt);
       const validPassword = await validatePassword(
         password,
         existingUser.password,
         existingUser.salt
       );
-
+      console.log(validPassword);
       if (!validPassword) {
         return {
           message: "Invalid password",
@@ -137,10 +137,13 @@ export default class authService {
       const token = await generateSignature({
         email: existingUser.email,
         userId: existingUser.userId,
-        firstName: existingUser.firstName,
-        lastName: existingUser.lastName,
+        userName: existingUser.userName,
       });
-
+      console.log("object", {
+        message: "User logged in successfully",
+        token,
+        status: 200,
+      });
       return {
         message: "User logged in successfully",
         token,
@@ -275,15 +278,10 @@ export default class authService {
         message: "User is authenticated",
         status: 200,
         userId: existingUser.userId,
-        firstName: existingUser.firstName,
-        middleName: existingUser.middleName,
-        lastName: existingUser.lastName,
+        userName: existingUser.userName,
+        bio: existingUser.bio,
         email: existingUser.email,
-        mobileNo: existingUser.mobileNo,
-        DOB: existingUser.DOB,
-        countryCallingCode: existingUser.countryCallingCode,
         profileImageUrl: existingUser.profileImageUrl,
-        isSecretsSet: existingUser.isSecretsSet,
       };
     } catch (err) {
       throw new APIError(

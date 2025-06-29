@@ -13,8 +13,10 @@ import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import Header from '../components/Header';
+import useAuthGuard from '../hooks/useAuthGuard';
 
 export default function ProfileScreen() {
+  useAuthGuard();
   const { currentUser, books, savedBooks, logout, cardPreference, setCardPreference } = useAppContext();
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('saved'); // 'saved' or 'quotes'

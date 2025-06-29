@@ -31,14 +31,14 @@ export default function LoginScreen() {
     }
     
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      login(email, password);
-      setIsLoading(false);
-      navigation.navigate('Home' as never);
-      toast.success('Welcome back!');
-    }, 1000);
+    login(email, password)
+      .then(() => {
+        toast.success('Welcome back!');
+      })
+      .catch((err: any) => {
+        toast.error(err.message || 'Login failed');
+      })
+      .finally(() => setIsLoading(false));
   };
   
   return (
@@ -107,17 +107,6 @@ export default function LoginScreen() {
             <Text style={styles.footerText}>Don't have an account?</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Register' as never)}>
               <Text style={styles.registerText}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.guestContainer}>
-            <TouchableOpacity 
-              style={styles.guestButton}
-              onPress={() => {
-                navigation.navigate('Home' as never);
-              }}
-            >
-              <Text style={styles.guestButtonText}>Continue as Guest</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

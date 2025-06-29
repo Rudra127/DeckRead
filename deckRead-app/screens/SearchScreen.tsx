@@ -14,8 +14,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import Header from '../components/Header';
 import BottomNavBar from '../components/BottomNavBar';
+import useAuthGuard from '../hooks/useAuthGuard';
 
 export default function SearchScreen() {
+  useAuthGuard();
   const { books } = useAppContext();
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');

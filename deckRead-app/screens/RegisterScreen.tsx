@@ -38,14 +38,15 @@ export default function RegisterScreen() {
     }
     
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      register(username, email, password);
-      setIsLoading(false);
-      navigation.navigate('Home' as never);
-      toast.success('Welcome to DeckRead!');
-    }, 1000);
+
+    register(username, email, password)
+      .then(() => {
+        toast.success('Welcome to DeckRead!');
+      })
+      .catch((err: any) => {
+        toast.error(err.message || 'Registration failed');
+      })
+      .finally(() => setIsLoading(false));
   };
   
   return (
@@ -132,17 +133,6 @@ export default function RegisterScreen() {
             <Text style={styles.footerText}>Already have an account?</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login' as never)}>
               <Text style={styles.loginText}>Sign In</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.guestContainer}>
-            <TouchableOpacity 
-              style={styles.guestButton}
-              onPress={() => {
-                navigation.navigate('Home' as never);
-              }}
-            >
-              <Text style={styles.guestButtonText}>Continue as Guest</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

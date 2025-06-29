@@ -10,10 +10,12 @@ import { useAppContext } from '../context/AppContext';
 import BookDeck from '../components/BookDeck';
 import Header from '../components/Header';
 import BottomNavBar from '../components/BottomNavBar';
+import useAuthGuard from '../hooks/useAuthGuard';
 
 const { height } = Dimensions.get('window');
 
 export default function HomeScreen() {
+  useAuthGuard();
   const { books } = useAppContext();
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
   
